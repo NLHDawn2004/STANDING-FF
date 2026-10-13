@@ -4242,67 +4242,106 @@ $("#importFile").onchange =
 
 $("#resetBtn").onclick = () => {
 
-  if (
+ 
+function resetClearIndexedDB(databaseName, storeName) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(databaseName);
 
-    !confirm(
+    request.onerror = () => {
+      reject(request.error || new Error("Không mở được " + databaseName));
+    };
 
-      "Reset toàn bộ Match ID và BXH?"
+    request.onsuccess = () => {
+      const db = request.result;
 
-    )
+      if (!db.objectStoreNames.contains(storeName)) {
+        db.close();
+        resolve();
+        return;
+      }
 
-  ) {
+      let tx;
 
-    return;
+      try {
+        tx = db.transaction(storeName, "readwrite");
+        tx.objectStore(storeName).clear();
+      } catch (error) {
+        db.close();
+        reject(error);
+        return;
+      }
 
-  }
+      tx.oncomplete = () => {
+        db.close();
+        resolve();
+      };
 
+      tx.onerror = () => {
+        db.close();
+        reject(tx.error || new Error("Không xóa được " + databaseName));
+      };
 
+      tx.onabort = () => {
+        db.close();
+        reject(tx.error || new Error("Đã hủy xóa " + databaseName));
+      };
+    };
+  });
+}
 
-  state.matchIds = [];
+$("#resetBtn").onclick = async () => {
+  const accepted = confirm(
+    "KHÔI PHỤC TOÀN BỘ VỀ MẶC ĐỊNH?\n\n" +
+    "Thao tác này sẽ xóa:\n" +
+    "• Match ID, bảng xếp hạng và dữ liệu trận đấu hiện tại\n" +
+    "• Logo đã thêm (bao gồm logo theo tên ảnh)\n" +
+    "• Mẫu bảng điểm tự tạo và ảnh nền đã tải lên\n" +
+    "• Các cài đặt và mẫu đã lưu trong trình duyệt\n\n" +
+    "Bảng điểm BEE BÚT BÔI × Hùng CAM mặc định sẽ được khôi phục.\n" +
+    "Dữ liệu đã xóa không thể hoàn tác. Bạn có chắc chắn?"
+  );
 
-  state.responses = [];
+  if (!accepted) return;
 
-  state.teams.clear();
+  const button = $("#resetBtn");
+  button.disabled = true;
 
-  state.logos = {};
+  const originalLabel = button.textContent;
+  button.textContent = "ĐANG RESET...";
 
+  setStatus("Đang xóa các mẫu bảng điểm và thư viện logo...", "");
 
+  try {
+    await resetClearIndexedDB(
+      "ff-standings-ranking-images",
+      "images"
+    );
 
-  state.detailGame =
+    await resetClearIndexedDB(
+      "ff-standings-logo-library",
+      "logos"
+    );
 
-    "overall";
+    localStorage.removeItem("ff_templates");
+    localStorage.removeItem("ff_ranking_library_v1");
 
+    window.location.reload();
 
+  } catch (error) {
+    console.error("Không thể khôi phục mặc định:", error);
 
-  state.detailTab =
+    setStatus(
+      "Reset chưa hoàn tất: " +
+      (error?.message || String(error)) +
+      ". Hãy thử lại.",
+      "error"
+    );
 
-    "team";
+    button.disabled = false;
+    button.textContent = originalLabel;
+  }
+};
 
-
-
-  matchInput.value = "";
-
-
-
-  detailPanel
-
-    .classList
-
-    .add("hidden");
-
-
-
-  render();
-
-
-
-  setStatus(
-
-    "Đã reset.",
-
-    "success"
-
-  );
 
 };
 
