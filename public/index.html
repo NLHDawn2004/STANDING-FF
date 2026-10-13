@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#080b0f"
+  >
+
+  <title>FF Standings · Esports Match Center</title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+</head>
+
+<body>
+
+  <!-- =====================================================
+       BACKGROUND FX
+  ====================================================== -->
+
+  <div class="page-bg" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="bg-glow glow-one"></div>
+    <div class="bg-glow glow-two"></div>
+  </div>
+
+
+  <!-- =====================================================
+       TOPBAR
+  ====================================================== -->
+
+  <header class="topbar">
+
+    <div class="topbar-inner">
+
+      <div class="brand">
+
+        <div class="brand-mark">
+          <span>FF</span>
+        </div>
+
+        <div class="brand-copy">
+          <strong>FF STANDINGS</strong>
+          <small>ESPORTS MATCH CENTER</small>
+        </div>
+
+      </div>
+
+
+      <div class="topbar-center">
+
+        <div class="live-indicator">
+          <span class="live-dot"></span>
+          <span>LIVE DATA</span>
+        </div>
+
+        <div class="server-indicator">
+          SEA MATCH STATS
+        </div>
+
+      </div>
+
+
+      <div class="topbar-actions">
+
+        <button
+          id="fullscreenBtn"
+          class="top-action"
+          type="button"
+        >
+          <span class="action-icon">⛶</span>
+          FULLSCREEN
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="app-shell">
+
+
+    <!-- ===================================================
+         HERO
+    ==================================================== -->
+
+    <section class="hero">
+
+      <div class="hero-copy">
+
+        <div class="eyebrow">
+          <span class="eyebrow-line"></span>
+          FREE FIRE ESPORTS DATA
+        </div>
+
+        <h1>
+          MATCH
+          <span>CENTER</span>
+        </h1>
+
+        <p>
+          Nhập Match ID để lấy dữ liệu trận đấu,
+          cộng dồn bảng xếp hạng và phân tích
+          Team Data, Player Data, Average và Operation.
+        </p>
+
+      </div>
+
+
+      <div class="hero-meta">
+
+        <div class="hero-meta-line">
+          OFFICIAL MATCH DATA
+        </div>
+
+        <strong>
+          REAL-TIME<br>
+          STANDINGS
+        </strong>
+
+        <span>
+          MULTI MATCH · CUMULATIVE
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         MATCH INPUT
+    ==================================================== -->
+
+    <section class="control-panel">
+
+      <div class="panel-corner corner-top-left"></div>
+      <div class="panel-corner corner-bottom-right"></div>
+
+
+      <div class="control-header">
+
+        <div>
+
+          <div class="section-kicker">
+            MATCH CONTROL
+          </div>
+
+          <h2>
+            IMPORT MATCH DATA
+          </h2>
+
+        </div>
+
+
+        <div class="control-badge">
+          API CONNECTED
+        </div>
+
+      </div>
+
+
+      <div class="match-form">
+
+        <div class="field-wrap">
+
+          <label for="matchId">
+            MATCH ID
+            <span>
+              · cách nhau bằng dấu phẩy
+            </span>
+          </label>
+
+          <div class="input-shell">
+
+            <span class="input-prefix">
+              ID
+            </span>
+
+            <input
+              id="matchId"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="ID trận 1, ID trận 2, ID trận 3, ID trận 4"
+            >
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="fetchBtn"
+          class="primary-btn"
+          type="button"
+        >
+          <span>LẤY ĐIỂM</span>
+          <b>↗</b>
+        </button>
+
+      </div>
+
+
+      <!-- TOOLBAR -->
+
+      <div class="toolbar">
+
+        <div class="toolbar-group">
+
+          <button
+            id="latestBtn"
+            class="tool-btn"
+            type="button"
+          >
+            <span class="tool-icon">◉</span>
+            TRẬN GẦN NHẤT
+          </button>
+
+
+          <button
+            id="accumulateBtn"
+            class="tool-btn active-tool"
+            type="button"
+          >
+            <span class="tool-icon">Σ</span>
+            Cộng dồn · 0 trận
+          </button>
+
+
+          <button
+            id="detailBtn"
+            class="tool-btn"
+            type="button"
+          >
+            <span class="tool-icon">▦</span>
+            CHI TIẾT TRẬN ĐẤU
+          </button>
+
+        </div>
+
+
+        <div class="toolbar-group toolbar-right">
+
+          <button
+            id="exportBtn"
+            class="mini-btn"
+            type="button"
+          >
+            EXPORT JSON
+          </button>
+
+          <button
+            id="importBtn"
+            class="mini-btn"
+            type="button"
+          >
+            IMPORT JSON
+          </button>
+
+          <input
+            id="importFile"
+            type="file"
+            accept=".json,application/json"
+            hidden
+          >
+
+          <button
+            id="resetBtn"
+            class="mini-btn danger-btn"
+            type="button"
+          >
+            RESET
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- STATUS -->
+
+      <div
+        id="status"
+        class="status"
+      >
+        Nhập một hoặc nhiều Match ID, cách nhau bằng dấu phẩy.
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         SUMMARY
+    ==================================================== -->
+
+    <section class="summary-section">
+
+      <div class="section-title-row">
+
+        <div>
+
+          <div class="section-kicker">
+            MATCH OVERVIEW
+          </div>
+
+          <h2>
+            TOURNAMENT DATA
+          </h2>
+
+        </div>
+
+
+        <div class="section-code">
+          FF / SEA / DATA
+        </div>
+
+      </div>
+
+
+      <div
+        id="matchSummary"
+        class="match-summary empty-state"
+      >
+        Nhập Match ID và bấm Lấy điểm để xem dữ liệu.
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         WORKSPACE TABS
+    ==================================================== -->
+
+    <section class="workspace">
+
+      <div class="workspace-tabs">
+
+        <button
+          class="tab active"
+          data-tab="designer"
+          type="button"
+        >
+          <span>01</span>
+          STANDINGS DESIGNER
+        </button>
+
+        <button
+          class="tab"
+          data-tab="templates"
+          type="button"
+        >
+          <span>02</span>
+          TEMPLATES
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           DESIGNER
+      ================================================== -->
+
+      <div
+        id="designerTab"
+        class="tab-content active"
+      >
+
+        <div class="designer-header">
+
+          <div>
+
+            <div class="section-kicker">
+              BROADCAST GRAPHIC
+            </div>
+
+            <h2>
+              OVERALL STANDINGS
+            </h2>
+
+          </div>
+
+
+          <div class="designer-actions">
+            <label class="ranking-select-label" for="rankingTemplateSelect">MẪU BẢNG ĐIỂM</label>
+            <select id="rankingTemplateSelect" aria-label="Chọn mẫu bảng điểm"><option value="default">BEE BÚT BÔI × HÙNG CAM</option></select>
+            <button id="rankingBulkLogoBtn" class="secondary-btn compact" type="button" title="Chọn nhiều ảnh logo, tên file trùng tên đội">+ LOGO THEO TÊN ẢNH</button>
+            <input id="rankingBulkLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
+
+            <button
+              id="downloadBtn"
+              class="primary-btn compact"
+              type="button"
+            >
+              EXPORT PNG
+              <b>↓</b>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             SCOREBOARD VIEWPORT
+        ================================================ -->
+
+        <div
+          id="canvasViewport"
+          class="canvas-viewport"
+        >
+
+          <div
+            id="scoreboard"
+            class="scoreboard"
+          >
+
+            <!-- decorative -->
+
+            <div class="score-bg-grid"></div>
+
+            <div class="score-slash slash-one"></div>
+            <div class="score-slash slash-two"></div>
+
+            <div class="score-accent accent-top"></div>
+            <div class="score-accent accent-bottom"></div>
+
+
+            <!-- header -->
+
+            <div class="score-header">
+
+              <div class="score-brand">
+
+                <div class="score-brand-mark">
+                  FF
+                </div>
+
+                <div>
+
+                  <small>
+                    FREE FIRE ESPORTS
+                  </small>
+
+                  <strong
+                    id="boardTitle"
+                    contenteditable="true"
+                    spellcheck="false"
+                  >
+                    OVERALL STANDINGS
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div class="score-match-info">
+
+                <span>
+                  MATCH CENTER
+                </span>
+
+                <strong
+                  id="boardGame"
+                >
+                  0 MATCHES
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- title -->
+
+            <div class="score-title-area">
+
+              <div>
+
+                <div class="score-kicker">
+                  LIVE TOURNAMENT DATA
+                </div>
+
+                <h2>
+                  CURRENT
+                  <span>RANKING</span>
+                </h2>
+
+              </div>
+
+
+              <div class="score-title-side">
+
+                <span>
+                  CUMULATIVE
+                </span>
+
+                <strong>
+                  SCOREBOARD
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- columns -->
+
+            <div class="board-columns">
+
+              <div>#</div>
+
+              <div>TEAM</div>
+
+              <div>BOOYAH</div>
+
+              <div>PLACE</div>
+
+              <div>KILLS</div>
+
+              <div>TOTAL</div>
+
+            </div>
+
+
+            <!-- rows -->
+
+            <div
+              id="boardRows"
+              class="board-rows"
+            ></div>
+
+
+            <!-- empty -->
+
+            <div
+              id="boardEmpty"
+              class="board-empty"
+            >
+
+              <div class="empty-cross">
+                +
+              </div>
+
+              <strong>
+                NO MATCH DATA
+              </strong>
+
+              <span>
+                IMPORT MATCH ID TO GENERATE STANDINGS
+              </span>
+
+            </div>
+
+
+            <!-- footer -->
+
+            <div class="score-footer">
+
+              <span>
+                FF STANDINGS SYSTEM
+              </span>
+
+              <span>
+                MATCH DATA · SEA
+              </span>
+
+              <span>
+                1920 × 1296
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             LOGO / DRIVE
+        ================================================ -->
+
+        <div class="designer-tools">
+
+          <div class="tool-card">
+
+            <div class="tool-card-number">
+              01
+            </div>
+
+            <div class="tool-card-content">
+
+              <div class="section-kicker">
+                TEAM ASSETS
+              </div>
+
+              <h3>
+                TEAM LOGOS
+              </h3>
+
+              <p>
+                Bấm trực tiếp vào ô logo trên bảng xếp hạng
+                để tải logo cho từng đội.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="tool-card"><div class="tool-card-number">AUTO</div><div class="tool-card-content"><div class="section-kicker">BULK LOGOS</div><h3>GHÉP LOGO THEO TÊN FILE</h3><p>Chọn nhiều ảnh cùng lúc. Ví dụ EVLX.png, ATL.png, TPE.png sẽ tự khớp tên đội trong Overall Standings, kể cả sau khi nhập Match ID mới.</p><button id="rankingBulkLogoToolBtn" type="button" class="secondary-btn">CHỌN NHIỀU LOGO</button><p id="rankingBulkLogoStatus" role="status" aria-live="polite">Chưa nhập logo hàng loạt.</p></div></div>
+          <div class="tool-card drive-card">
+
+            <div class="tool-card-number">
+              02
+            </div>
+
+            <div class="tool-card-content">
+
+              <div class="section-kicker">
+                CLOUD ASSETS
+              </div>
+
+              <h3>
+                GOOGLE DRIVE
+              </h3>
+
+              <div class="drive-row">
+
+                <input
+                  id="driveUrl"
+                  type="text"
+                  placeholder="Dán link thư mục Google Drive..."
+                >
+
+                <button
+                  id="driveBtn"
+                  class="secondary-btn"
+                  type="button"
+                >
+                  CONNECT
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- AI SCOREBOARD IMPORT -->
+        <div class="tool-card ai-score-card">
+          <div class="tool-card-number">03</div>
+          <div class="tool-card-content">
+            <div class="section-kicker">LOCAL OCR · NO API KEY</div>
+            <h3>THÊM ẢNH BẢNG ĐIỂM</h3>
+            <p>Tải ảnh bảng điểm Free Fire. Tải ảnh mẫu, chọn LẤY TỪ CURRENT RANKING rồi nhấn ÁP DỤNG LÊN ẢNH MẪU để đổ dữ liệu vào ảnh. Có thể dùng OCR để đọc ảnh có sẵn số liệu. Kiểm tra lại các cột trước khi áp dụng; logo sẽ được ghép từ kho logo hiện có.</p>
+            <div class="ai-score-actions">
+              <button id="scoreImageBtn" class="secondary-btn" type="button">CHỌN ẢNH BẢNG ĐIỂM</button>
+              <button id="scoreFromRankingBtn" class="secondary-btn" type="button">LẤY TỪ CURRENT RANKING</button>
+              <span id="scoreImageName" class="ai-file-name">Chưa chọn ảnh</span>
+              <label class="ocr-mode-label" for="scoreOCRMode">Chế độ đọc:</label>
+              <select id="scoreOCRMode" class="ocr-mode-select"><option value="position">Theo vị trí mẫu BEE BÚT BÔI (12 đội)</option><option value="auto">OCR tự động (mẫu khác)</option></select>
+            </div>
+          </div>
+        </div>
+
+        <input id="scoreImagePicker" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+
+        <input
+          id="logoPicker"
+          type="file"
+          accept="image/*"
+          hidden
+        >
+
+      </div>
+
+
+      <!-- =================================================
+           TEMPLATES
+      ================================================== -->
+
+      <div
+        id="templatesTab"
+        class="tab-content"
+      >
+
+        <div class="template-panel">
+
+          <div class="template-header">
+
+            <div>
+
+              <div class="section-kicker">
+                DESIGN PRESETS
+              </div>
+
+              <h2>
+                TEMPLATES
+              </h2>
+
+            </div>
+
+          </div>
+
+
+          <section class="ranking-manager" aria-label="Quản lý mẫu bảng điểm">
+            <div class="ranking-manager-intro">THƯ VIỆN BẢNG ĐIỂM — ảnh trống làm nền; ảnh có thông số dùng để xác định vị trí các cột. Tất cả mẫu dùng chung dữ liệu Match ID.</div>
+            <div class="ranking-manager-actions">
+              <button type="button" class="primary-btn compact" id="rankingAddBlank">+ THÊM BẢNG ĐIỂM TRỐNG</button>
+              <button type="button" class="mini-btn" id="rankingAnalyzeReference">⌗ PHÂN TÍCH ẢNH CÓ THÔNG SỐ</button>
+              <input type="file" id="rankingBlankInput" accept="image/png,image/jpeg,image/webp" hidden>
+              <input type="file" id="rankingReferenceInput" accept="image/png,image/jpeg,image/webp" hidden>
+            </div>
+            <div id="rankingManagerMessage" class="ranking-manager-message" role="status"></div>
+            <div class="ranking-manager-editor hidden" id="rankingManagerEditor">
+              <div class="ranking-manager-heading"><strong id="rankingEditingName">ĐANG CHỈNH MẪU</strong><button id="rankingCloseEditor" class="mini-btn" type="button">ĐÓNG</button></div>
+              <p class="ranking-editor-help">Kéo các điểm neo trên ảnh để căn vị trí tên đội, logo và các cột. Các vị trí áp dụng đồng đều cho tất cả hàng. Ảnh tham chiếu dùng để gợi ý vị trí, không ghi đè ảnh nền trống.</p>
+              <div class="ranking-editor-preview" id="rankingEditorPreview"><img id="rankingEditorImage" alt="Ảnh nền mẫu"><div id="rankingEditorMarkers"></div></div>
+              <div class="ranking-editor-fields">
+                <label>Hàng đầu (Y)<input id="rankingFirstY" type="number" min="0" max="1080" step="1"></label>
+                <label>Khoảng cách hàng<input id="rankingStepY" type="number" min="10" max="200" step="1"></label>
+                <label>Cỡ chữ<input id="rankingFontSize" type="number" min="12" max="72" step="1"></label>
+              </div>
+              <div class="ranking-editor-buttons"><button type="button" id="rankingSaveEditor" class="primary-btn compact">LƯU VỊ TRÍ</button><button type="button" id="rankingDeleteCurrent" class="danger">XÓA MẪU</button></div>
+            </div>
+            <div id="rankingLibrary" class="ranking-library"></div>
+          </section>
+
+          <div class="template-create">
+
+            <input
+              id="templateName"
+              type="text"
+              placeholder="Tên mẫu..."
+            >
+
+            <button
+              id="saveTemplateBtn"
+              class="primary-btn compact"
+              type="button"
+            >
+              LƯU MẪU
+            </button>
+
+          </div>
+
+
+          <div
+            id="templateList"
+            class="template-list"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       AI SCOREBOARD PREVIEW
+  ====================================================== -->
+  <section id="scoreImportPanel" class="score-import-panel hidden">
+    <div class="detail-backdrop" id="scoreImportBackdrop"></div>
+    <div class="score-import-modal">
+      <div class="detail-modal-header">
+        <div>
+          <div class="section-kicker">NHẬN DIỆN ẢNH BẰNG OCR</div>
+          <h2>KIỂM TRA BẢNG ĐIỂM</h2>
+        </div>
+        <button id="closeScoreImport" class="close-detail" type="button">×</button>
+      </div>
+      <div class="score-import-body">
+        <div class="score-import-image-wrap">
+          <img id="scoreImportImage" alt="Ảnh bảng điểm">
+        </div>
+        <div class="score-import-editor">
+          <div class="score-import-toolbar">
+            <div>
+              <strong id="scoreImportTitle">KẾT QUẢ NHẬN DIỆN</strong>
+              <span id="scoreImportConfidence"></span>
+            </div>
+            <div class="score-import-toolbar-actions"><button id="applyToTemplateImage" class="mini-btn" type="button">✓ ÁP DỤNG LÊN ẢNH MẪU</button><button id="scoreImportFromRankingBtn" class="mini-btn" type="button">↻ LẤY TỪ CURRENT RANKING</button><button id="addScoreRowBtn" class="mini-btn" type="button">+ THÊM ĐỘI</button></div>
+          </div>
+          <div id="scoreTemplateOutput" class="score-template-output hidden">
+            <div class="score-template-output-head"><strong>ẢNH BẢNG ĐIỂM ĐÃ ĐIỀN THÔNG SỐ</strong><button id="downloadTemplateImage" class="mini-btn" type="button">↓ TẢI ẢNH PNG</button></div>
+            <img id="scoreTemplateResult" alt="Bảng điểm đã điền dữ liệu">
+          </div>
+          <div class="score-import-table-wrap">
+            <table class="score-import-table">
+              <thead><tr><th>#</th><th>ĐỘI</th><th>BOOYAH</th><th>ĐIỂM HẠNG</th><th>HẠ GỤC</th><th>TỔNG</th><th></th></tr></thead>
+              <tbody id="scoreImportRows"></tbody>
+            </table>
+          </div>
+          <div id="scoreImportNotes" class="score-import-notes"></div>
+          <div id="scoreImportError" class="score-import-error" role="alert" hidden></div>
+          <div class="score-import-footer">
+            <button id="cancelScoreImport" class="mini-btn" type="button">HỦY</button>
+            <button id="applyScoreImport" class="primary-btn compact" type="button"><span>THAY DỮ LIỆU CURRENT RANKING</span><b>↗</b></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       DETAIL PANEL
+  ====================================================== -->
+
+  <section
+    id="detailPanel"
+    class="detail-panel hidden"
+  >
+
+    <div class="detail-backdrop"></div>
+
+
+    <div class="detail-modal">
+
+      <div class="detail-modal-header">
+
+        <div>
+
+          <div class="section-kicker">
+            PERFORMANCE ANALYTICS
+          </div>
+
+          <h2>
+            MATCH DETAILS
+          </h2>
+
+        </div>
+
+
+        <button
+          id="closeDetail"
+          class="close-detail"
+          type="button"
+          aria-label="Đóng"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div
+        id="detailContent"
+        class="detail-content"
+      ></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer class="page-footer">
+
+    <div>
+      FF STANDINGS
+      <span>／</span>
+      ESPORTS MATCH CENTER
+    </div>
+
+    <div>
+      FREE FIRE DATA SYSTEM
+    </div>
+
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
